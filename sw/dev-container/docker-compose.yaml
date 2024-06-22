@@ -1,0 +1,8 @@
+services:
+  pico-dev:
+    build: /
+    volumes:
+      - ../../:/usr/src/librespresso
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    tty: true

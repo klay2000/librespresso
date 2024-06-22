@@ -1,0 +1,2 @@
+# Firmware
+To hack on the Librespresso firmware, run the docker compose script in sw/dev-container, connect with vscode and build with cmake. ~~To flash the firmware to a board you can use uspipd to connect a usb device to the WSL2 vm and use the pre-installed picotool in the image, this should "just work".~~ This isn't working on windows at the moment.

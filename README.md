@@ -1,2 +1,2 @@
 # librespresso
-An open-source connected espresso machine.
+An open-source "smart" espresso machine.

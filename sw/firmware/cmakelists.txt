@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 3.13)
+
+#initialize the SDK based on PICO_SDK_PATH
+include(pico_sdk_import.cmake)
+
+#Pull in FreeRTOS
+include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+
+project(librespresso)
+
+#initialize the Raspberry Pi Pico SDK
+pico_sdk_init()
+
+add_executable( librespresso
+                main.c
+                HAL/serial.c
+                HAL/ADC.c
+                HAL/pump.c)
+
+target_include_directories(librespresso PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+
+#Add pico_stdlib library which aggregates commonly used features
+target_link_libraries(librespresso pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 hardware_spi)
+
+#create map / bin / hex / uf2 file in addition to ELF.
+pico_add_extra_outputs(librespresso)
+
+pico_enable_stdio_usb(librespresso 1)
+pico_enable_stdio_uart(librespresso 0)

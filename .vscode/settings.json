@@ -1,0 +1,5 @@
+{
+  "cmake.sourceDirectory": "/usr/src/librespresso/sw/firmware",
+  "editor.formatOnSave": true,
+  "C_Cpp.formatting": "clangFormat",
+}
