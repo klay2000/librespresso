@@ -13,6 +13,8 @@ pico_sdk_init()
 
 add_executable( librespresso
                 main.c
+                config.c
+                packet.c
                 HAL/serial.c
                 HAL/ADC.c
                 HAL/pump.c)

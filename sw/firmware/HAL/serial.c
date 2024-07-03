@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 #include "FreeRTOS.h"
-#include "constants.h"
 #include "pico/stdlib.h"
 #include "semphr.h"
 
