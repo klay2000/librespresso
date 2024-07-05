@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include "command.h"
+
 // X macro to declare each config variable,
 #define X(n, t) static t _##n = 0;
 CFG_VARS

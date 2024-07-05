@@ -110,7 +110,7 @@ processor and application]
 #define configUSE_CORE_AFFINITY       1
 
 /* RP2040 specific */
-// TODO: Not entirely sure the consequences of setting this to 0, but it
+// HACK: Not entirely sure the consequences of setting this to 0, but it
 // prevents pico sdk issue #1453 from happening
 #define configSUPPORT_PICO_SYNC_INTEROP 0
 #define configSUPPORT_PICO_TIME_INTEROP 1
