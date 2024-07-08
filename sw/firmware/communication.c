@@ -48,22 +48,26 @@ void vSerialTxTask(void* pvParameters) {
   free_pkt_queue = xQueueCreate(TX_BUF_SIZE, sizeof(uart_pkt_t*));
   tx_queue       = xQueueCreate(TX_BUF_SIZE, sizeof(uart_pkt_t*));
   for (int i = 0; i < TX_BUF_SIZE; i++) {
-    xQueueSend(free_pkt_queue, &tx_buf[i], 0);
+    uart_pkt_t* pkt = &tx_buf[i];
+    xQueueSend(free_pkt_queue, &pkt, portMAX_DELAY);
   }
 
   while (1) {
     uart_pkt_t* pkt;
+    // printf("waiting for packet to send\n");
     xQueueReceive(tx_queue, &pkt, portMAX_DELAY);
+    // printf("got packet to send\n");
 
     // calculate checksum
-    uint8_t checksum = pkt->id;
+    pkt->checksum = pkt->id;
     for (int i = 0; i < pkt->len; i++) {
-      checksum += pkt->data[i];
+      pkt->checksum += pkt->data[i];
     }
-
+    // printf("writing packet\n");
     socuart_write_byte(0x02);
-    socuart_write_buffer((uint8_t*)pkt, pkt->len);
+    socuart_write_buffer((uint8_t*)pkt, pkt->len + 3);
     socuart_write_byte(0x03);
+    // printf("done\n");
 
     xQueueSend(free_pkt_queue, &pkt, 0);  // return pkt to pool
   }
@@ -73,18 +77,19 @@ void send_pkt(uart_pkt_t* pkt) { xQueueSend(tx_queue, &pkt, portMAX_DELAY); }
 
 uart_pkt_t* get_tx_buffer() {
   uart_pkt_t* pkt;
-  xQueueReceive(free_pkt_queue, pkt, portMAX_DELAY);
+  xQueueReceive(free_pkt_queue, &pkt, portMAX_DELAY);
   return pkt;
 }
 
 void debug_printf(const char* fmt, ...) {
   uart_pkt_t* pkt = get_tx_buffer();
 
+  // todo: modify to split into multiple packets if needed
+
   va_list args;
   va_start(args, fmt);
-  sprintf(pkt->data, fmt, args);
+  vsnprintf(pkt->data, sizeof(pkt->data), fmt, args);
   va_end(args);
-
   pkt->len = strlen(pkt->data);
   pkt->id  = UART_PKT_DEBUG;
 

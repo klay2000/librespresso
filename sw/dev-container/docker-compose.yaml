@@ -1,8 +1,10 @@
 services:
   pico-dev:
-    build: /
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ../../:/usr/src/librespresso
-    devices:
       - /dev/bus/usb:/dev/bus/usb
     tty: true

@@ -2,4 +2,27 @@
   "cmake.sourceDirectory": "/usr/src/librespresso/sw/firmware",
   "editor.formatOnSave": true,
   "C_Cpp.formatting": "clangFormat",
+  "files.associations": {
+    "constants.h": "c",
+    "semphr.h": "c",
+    "stdint.h": "c",
+    "system_error": "cpp",
+    "array": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "stdbool.h": "c",
+    "freertos.h": "c",
+    "queue.h": "c",
+    "command.h": "c",
+    "socuart.h": "c",
+    "cstdio": "c"
+  },
+  "python.testing.pytestArgs": [
+    "sw/librespresso/tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "cmake.configureOnOpen": false,
 }

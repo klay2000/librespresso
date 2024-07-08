@@ -1,10 +1,12 @@
 #include "socuart.h"
 
+#include <stdio.h>
+
 #include "tusb.h"
 
 void socuart_init() {
   stdio_init_all();
-  while (!tud_cdc_available());  // Wait for host to open the serial port
+  stdio_set_translate_crlf(&stdio_usb, false);
 }
 
 void socuart_write_byte(uint8_t data) { putchar(data); }

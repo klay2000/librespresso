@@ -14,7 +14,7 @@ static void handle_cfg_pkt(uart_pkt_t* pkt);
 
 void handle_pkt(uart_pkt_t* pkt) {
   switch (pkt->id) {
-#define X(n, h)      \
+#define X(n, h, num)      \
   case UART_PKT_##n: \
     h(pkt);          \
     break;
@@ -33,7 +33,7 @@ static void handle_hb(uart_pkt_t* pkt) {
   // send a heartbeat packet back to the SOC
   uart_pkt_t* hb_pkt = get_tx_buffer();
   hb_pkt->len        = 0;
-  hb_pkt->id         = 0;
+  hb_pkt->id         = UART_PKT_HB;
   send_pkt(hb_pkt);
 }
 

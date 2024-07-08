@@ -4,7 +4,7 @@ WORKDIR /usr/src
 RUN apt update && apt install -y git gcc g++ cmake gcc-arm-none-eabi libnewlib-arm-none-eabi pkg-config build-essential libusb-1.0-0-dev
 
 # define compiler env variables
-Env CXX=g++ CC=gcc
+ENV CXX=g++ CC=gcc
 
 # clone pico sdk
 RUN git clone https://github.com/raspberrypi/pico-sdk.git
@@ -20,7 +20,6 @@ RUN git clone -b smp https://github.com/FreeRTOS/FreeRTOS-Kernel --recurse-submo
 
 # define freertos kernel path
 ENV FREERTOS_KERNEL_PATH=/usr/src/FreeRTOS-Kernel
-
 
 # build and install picotool for flashing
 RUN git clone https://github.com/raspberrypi/picotool.git &&\

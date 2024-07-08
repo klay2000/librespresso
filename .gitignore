@@ -1,1 +1,5 @@
 build/
+env/
+__pycache__/
+config.json
+cmake-build-debug/

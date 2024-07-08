@@ -11,15 +11,15 @@ typedef enum {
   CFG_VARS
 #undef X
 } cfg_var_t;
-#define UART_PKT_TYPES      \
-  X(HB, handle_hb)          \
-  X(CONFIG, handle_cfg_pkt) \
-  X(DEBUG, empty_handler)
+#define UART_PKT_TYPES         \
+  X(HB, handle_hb, 0)          \
+  X(CONFIG, handle_cfg_pkt, 1) \
+  X(DEBUG, empty_handler, 2)
 
 // TODO: make it possible to define pinouts at startup via config
 
 typedef enum {
-#define X(n, h) UART_PKT_##n,
+#define X(n, h, num) UART_PKT_##n = num,
   UART_PKT_TYPES
 #undef X
 } uart_pkt_id_t;
