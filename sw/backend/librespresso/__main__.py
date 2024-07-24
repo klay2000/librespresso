@@ -7,6 +7,8 @@ import sys
 
 from librespresso import command
 from librespresso.config import load_config
+from librespresso.heartbeat import Heartbeat
+from librespresso.mainloop import MainLoop
 from librespresso.uart import Uart
 
 logger = logging.getLogger()
@@ -31,11 +33,8 @@ def main():
                         help='Path to the configuration file, a file will be created with default '
                         'values if not present',
                         default='config.json')
-    parser.add_argument('--command',
-                        help='Command mode, send raw commands and receive responses',
-                        action='store_true')
-    parser.add_argument('--heartbeat',
-                        help='Automatically send heartbeat messages in command mode',
+    parser.add_argument('--nh', '--no-heartbeat',
+                        help='Disable automatic heartbeat',
                         action='store_true')
     parser.add_argument('--debug',
                         help='Enable debug logging',
@@ -48,30 +47,24 @@ def main():
     config = load_config(args.config)
 
     logger.info('Loaded configuration: %s', config)
-    if args.command:
-        uart = Uart(config.mcu_serial_port, config.mcu_baudrate)
-        if args.heartbeat:
-            logger.info('Starting heartbeat...')
-            uart.start_heartbeat()
+    uart = Uart(config.mcu_serial_port, config.mcu_baudrate)
+    heartbeat = Heartbeat(uart, config.heartbeat_interval)
 
-            @uart.uart_callback(command.CommandType.HB)
-            def hb_callback(pkt):
-                logger.debug('Heartbeat received: %s', pkt)
+    if args.nh:
+        logger.info('Heartbeat disabled')
+        heartbeat.stop()
+    else:
+        @uart.uart_callback(command.CommandType.HB)
+        def hb_callback(pkt):
+            logger.debug('Heartbeat received: %s', pkt)
 
+    if args.debug:
         @uart.uart_callback(command.CommandType.DEBUG)
         def debug_callback(pkt):
             logger.debug('Debug message received: %s',
                          bytearray(pkt.data).decode())
 
-        logger.info('Entering command mode...')
-        while True:
-            pass
-            # try:
-            #     command_str = input('Enter command: ')
-            #     command_bytes = bytes.fromhex(command_str)
-            #     uart.send(command.Command.from_bytes(command_bytes))
-            # except Exception as e:
-            #     logger.error('Error sending command: %s', e)
+    mainloop = MainLoop(uart, config)
 
 
 if __name__ == '__main__':

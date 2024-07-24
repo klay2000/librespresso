@@ -1,2 +1,2 @@
 """librespresso"""
-__all__ = ['command', 'config', 'state', 'uart']
+__all__ = ['command', 'config', 'heartbeat', 'state', 'uart']

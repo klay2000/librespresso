@@ -17,7 +17,11 @@
     "queue.h": "c",
     "command.h": "c",
     "socuart.h": "c",
-    "cstdio": "c"
+    "cstdio": "c",
+    "task.h": "c",
+    "state.h": "c",
+    "communication.h": "c",
+    "pressure_control.h": "c"
   },
   "python.testing.pytestArgs": [
     "sw/librespresso/tests"

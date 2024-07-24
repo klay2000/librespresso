@@ -12,6 +12,8 @@ class PIDParams(pydantic.BaseModel):
     p: float = 0.0
     i: float = 0.0
     d: float = 0.0
+    out_min: float = 0.0
+    out_max: float = 0.0
 
 
 class LinearCalParams(pydantic.BaseModel):

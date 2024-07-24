@@ -12,3 +12,5 @@
 #define VESC_UART_PORT uart0
 #define VESC_TX_PIN    16
 #define VESC_RX_PIN    17
+
+#define PUMP_PRESSURE_SENSOR_ADC_CHANNEL 0

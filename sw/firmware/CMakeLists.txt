@@ -16,9 +16,15 @@ add_executable( librespresso
                 config.c
                 command.c
                 communication.c
-                HAL/socuart.c
                 HAL/ADC.c
-                HAL/pump.c)
+                HAL/pump.c
+                HAL/reboot.c
+                HAL/socuart.c
+                linear_cal.c
+                pid.c
+                pressure_control.c
+                pressure_sensor.c
+                state.c)
 
 target_include_directories(librespresso PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
@@ -30,3 +36,8 @@ pico_add_extra_outputs(librespresso)
 
 pico_enable_stdio_usb(librespresso 1)
 pico_enable_stdio_uart(librespresso 0)
+
+# Add the flash target to upload the firmware
+add_custom_target( flash
+                   COMMAND ${CMAKE_CURRENT_LIST_DIR}/flash.sh
+                   DEPENDS librespresso)

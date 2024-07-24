@@ -390,7 +390,6 @@ static void ts_uart_puts(char *str, uint8_t len) {
 // PORTING: this task sets up the pump and handles interfacing with it,
 // including reading the pump rpm
 void vPumpTask() {
-  debug_printf("Pump task starting...\n");
   uart_init(VESC_UART_PORT, 115200);
   uart_set_format(VESC_UART_PORT, 8, 1, UART_PARITY_NONE);
   gpio_set_function(VESC_TX_PIN, GPIO_FUNC_UART);
@@ -405,8 +404,6 @@ void vPumpTask() {
 
   char read_command[]       = {VESC_COMM_GET_VALUES};
   char keep_alive_command[] = {VESC_COMM_ALIVE};
-
-  debug_printf("Pump task initialized\n");
 
   while (1) {
     // send the read command
@@ -430,7 +427,6 @@ void set_pump_rpm(int32_t rpm) {
 
   // send the command to the VESC
   send_payload(rpm_command, 5);
-  debug_printf("Pump RPM set to %u\n", rpm);
 }
 
 // PORTING: this function should return the most recently read pump rpm

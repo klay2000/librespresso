@@ -25,16 +25,19 @@ void vSerialRxTask(void* pvParameters) {
     rx_pkt.checksum = socuart_get_byte();
     rx_pkt.id       = socuart_get_byte();
 
+    // debug_printf("Receiving packet, len: %d, id: %d\n", rx_pkt.len, rx_pkt.id);
+
     checksum = rx_pkt.checksum - rx_pkt.id;
 
     for (int i = 0; i < rx_pkt.len; i++) {
       rx_pkt.data[i] = socuart_get_byte();
       checksum -= rx_pkt.data[i];
     }
-    if (socuart_get_byte() == 0x03 && rx_pkt.checksum == 0) {
+    uint8_t end = socuart_get_byte();
+    if (end == 0x03 && checksum == 0) {
       handle_pkt(&rx_pkt);
     } else {
-      // TODO: handle error in a way that isn't just ignoring the packet
+      debug_printf("bad packet received, end=%u checksum=%u\n", end, checksum);
     }
   }
 }

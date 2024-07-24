@@ -19,3 +19,6 @@ The heartbeat packet is used to ensure that the connection between the host pc a
 |0x00 | HB | Heartbeat, must be sent on some interval by the SOC to the MCU. MCU will send back. |
 |0x01 | CONFIG | Sent with a 1 byte var identifier and a 4 byte value to set or a 1 byte identifier without a value to read |
 |0x02 | DEBUG | Sent only by the MCU to the SOC, contains a string of debug information |
+|0x03 | REBOOT | Sent by SOC to MCU to reboot the MCU |
+|0x04 | START_SYSTEM | Sent by SOC to MCU to shift the MCU out of the initial configuaration mode |
+|0x05 | SET_PUMP_PRESSURE | Sent by the SOC to the MCU to set the target pump pressure |

@@ -2,6 +2,7 @@
 
 from enum import IntEnum
 import logging
+import struct
 from typing import Self
 
 logger = logging.getLogger(__name__)
@@ -12,38 +13,39 @@ class CommandType(IntEnum):
     HB = 0
     CONFIG = 1
     DEBUG = 2
+    RESET = 3
+    START = 4
 
 
 class ConfigParameter(IntEnum):
     """Configuration parameters for the MCU."""
     PUMP_MAX_RPM = 0
-    PUMP_PID_P = 1
-    PUMP_PID_I = 2
-    PUMP_PID_D = 3
-    PUMP_PRESSURE_CAL_M = 4
-    PUMP_PRESSURE_CAL_B = 5
+    PUMP_PID = 1
+    PUMP_PRESSURE_CAL = 2
 
 
 class Command:
     """Represents a command recieved from or to be sent to the MCU."""
 
-    def __init__(self, command_type: CommandType, data: bytes):
-        self.command_type = command_type
-        self.data = data
+    def __init__(self, command_type: CommandType, data: bytearray):
+        self.command_type: CommandType = command_type
+        self.data: bytearray = data
 
-    def to_bytes(self) -> bytes:
+    def to_bytes(self) -> bytearray:
         """Convert the command to a byte array."""
-        return [0x02, len(self.data), self.checksum(), self.command_type] + self.data + [0x03]
+        return bytearray([0x02, len(self.data), self.checksum(), self.command_type])\
+            + self.data\
+            + bytearray([0x03])
 
     def checksum(self) -> int:
         """Calculate the checksum for the command."""
         return (sum(self.data)+self.command_type) & 0xff
 
     @staticmethod
-    def from_bytes(data: bytes) -> Self:
+    def from_bytes(data: bytearray) -> Self:
         """Create a command from a byte array."""
         if data[0] != 0x02 or data[-1] != 0x03:
-            raise ValueError("Invalid framing bytes")
+            raise ValueError("Invalid framing bytearray")
         if data[1] != len(data)-5:
             raise ValueError(
                 f"Invalid length byte, expected: {len(data)-5}, received: {data[1]}")
@@ -56,9 +58,19 @@ class Command:
     @staticmethod
     def heartbeat() -> Self:
         """Create a heartbeat command."""
-        return Command(CommandType.HB, [])
+        return Command(CommandType.HB, bytearray([]))
 
     @staticmethod
-    def config(parameter: ConfigParameter, data: bytes) -> Self:
+    def config(parameter: ConfigParameter, data: bytearray) -> Self:
         """Create a configuration command."""
-        return Command(CommandType.CONFIG, parameter+data)
+        return Command(CommandType.CONFIG, bytearray(int(parameter).to_bytes(1, 'big'))+data)
+
+    @staticmethod
+    def reset() -> Self:
+        """Create a reset command."""
+        return Command(CommandType.RESET, bytearray([]))
+
+    @staticmethod
+    def start() -> Self:
+        """Create a start command."""
+        return Command(CommandType.START, bytearray([]))

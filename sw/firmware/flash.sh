@@ -1,0 +1,1 @@
+picotool reboot -uf && sleep 1 && picotool load librespresso.uf2 && sleep 1 && picotool reboot -f
